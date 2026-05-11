@@ -1,6 +1,7 @@
-CREATE DATABASE IF NOT EXISTS bts2;
 
-USE bts2;
+CREATE DATABASE IF NOT EXISTS bts;
+
+USE bts;
 
 -- ============================================================
 -- 1. ADMINS
@@ -9,7 +10,7 @@ CREATE TABLE IF NOT EXISTS admins (
     admin_id INT PRIMARY KEY AUTO_INCREMENT,
     full_name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     role ENUM('super_admin', 'manager', 'support') DEFAULT 'support',
     is_active BOOLEAN DEFAULT TRUE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -23,7 +24,7 @@ CREATE TABLE IF NOT EXISTS passengers (
     full_name VARCHAR(100) NOT NULL,
     phone VARCHAR(15) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     gender ENUM('Male', 'Female', 'Other'),
     date_of_birth DATE,
     nid_number VARCHAR(20) UNIQUE,
