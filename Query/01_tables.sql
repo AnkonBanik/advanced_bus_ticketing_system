@@ -3,9 +3,9 @@ CREATE DATABASE IF NOT EXISTS bts;
 
 USE bts;
 
--- ============================================================
+
 -- 1. ADMINS
--- ============================================================
+
 CREATE TABLE IF NOT EXISTS admins (
     admin_id INT PRIMARY KEY AUTO_INCREMENT,
     full_name VARCHAR(100) NOT NULL,
@@ -16,9 +16,9 @@ CREATE TABLE IF NOT EXISTS admins (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- ============================================================
+
 -- 2. PASSENGERS
--- ============================================================
+
 CREATE TABLE IF NOT EXISTS passengers (
     passenger_id INT PRIMARY KEY AUTO_INCREMENT,
     full_name VARCHAR(100) NOT NULL,
@@ -34,9 +34,9 @@ CREATE TABLE IF NOT EXISTS passengers (
     last_login DATETIME
 );
 
--- ============================================================
+
 -- 3. OPERATORS
--- ============================================================
+
 CREATE TABLE IF NOT EXISTS operators (
     operator_id INT PRIMARY KEY AUTO_INCREMENT,
     operator_name VARCHAR(100) NOT NULL,
@@ -50,9 +50,9 @@ CREATE TABLE IF NOT EXISTS operators (
     joined_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- ============================================================
+
 -- 4. BUSES
--- ============================================================
+
 CREATE TABLE IF NOT EXISTS buses (
     bus_id INT PRIMARY KEY AUTO_INCREMENT,
     operator_id INT NOT NULL,
@@ -67,9 +67,9 @@ CREATE TABLE IF NOT EXISTS buses (
         REFERENCES operators (operator_id)
 );
 
--- ============================================================
+
 -- 5. SEATS
--- ============================================================
+
 CREATE TABLE IF NOT EXISTS seats (
     seat_id INT PRIMARY KEY AUTO_INCREMENT,
     bus_id INT NOT NULL,
@@ -81,9 +81,9 @@ CREATE TABLE IF NOT EXISTS seats (
         REFERENCES buses (bus_id)
 );
 
--- ============================================================
+
 -- 6. ROUTES
--- ============================================================
+
 CREATE TABLE IF NOT EXISTS routes (
     route_id INT PRIMARY KEY AUTO_INCREMENT,
     source_city VARCHAR(100) NOT NULL,
@@ -93,9 +93,9 @@ CREATE TABLE IF NOT EXISTS routes (
     is_active BOOLEAN DEFAULT TRUE
 );
 
--- ============================================================
+
 -- 7. ROUTE STOPS (Ordered Stoppages)
--- ============================================================
+
 CREATE TABLE IF NOT EXISTS route_stops (
     stop_id INT PRIMARY KEY AUTO_INCREMENT,
     route_id INT NOT NULL,
@@ -107,9 +107,9 @@ CREATE TABLE IF NOT EXISTS route_stops (
         REFERENCES routes (route_id)
 );
 
--- ============================================================
+
 -- 8. FARES (Segment-Based Pricing)
--- ============================================================
+
 CREATE TABLE IF NOT EXISTS fares (
     fare_id INT PRIMARY KEY AUTO_INCREMENT,
     route_id INT NOT NULL,
@@ -127,9 +127,9 @@ CREATE TABLE IF NOT EXISTS fares (
     CHECK (amount > 0)
 );
 
--- ============================================================
+
 -- 9. TRIPS
--- ============================================================
+
 CREATE TABLE IF NOT EXISTS trips (
     trip_id INT PRIMARY KEY AUTO_INCREMENT,
     bus_id INT NOT NULL,
@@ -145,9 +145,9 @@ CREATE TABLE IF NOT EXISTS trips (
         REFERENCES routes (route_id)
 );
 
--- ============================================================
+
 -- 10. BOOKINGS
--- ============================================================
+
 CREATE TABLE IF NOT EXISTS bookings (
     booking_id INT PRIMARY KEY AUTO_INCREMENT,
     passenger_id INT NOT NULL,
@@ -170,9 +170,9 @@ CREATE TABLE IF NOT EXISTS bookings (
         REFERENCES route_stops (stop_id)
 );
 
--- ============================================================
+
 -- 11. BOOKING SEATS (Junction - Multi-Seat Support)
--- ============================================================
+
 CREATE TABLE IF NOT EXISTS booking_seats (
     booking_seat_id INT PRIMARY KEY AUTO_INCREMENT,
     booking_id INT NOT NULL,
@@ -187,9 +187,9 @@ CREATE TABLE IF NOT EXISTS booking_seats (
 -- Enforced via application logic or trigger (shown below)
 CREATE UNIQUE INDEX idx_trip_seat ON booking_seats(booking_id, seat_id);
 
--- ============================================================
+
 -- 12. PAYMENTS
--- ============================================================
+
 CREATE TABLE IF NOT EXISTS payments (
     payment_id INT PRIMARY KEY AUTO_INCREMENT,
     booking_id INT NOT NULL,
@@ -203,9 +203,9 @@ CREATE TABLE IF NOT EXISTS payments (
         REFERENCES bookings (booking_id)
 );
 
--- ============================================================
+
 -- 13. CANCELLATIONS
--- ============================================================
+
 CREATE TABLE IF NOT EXISTS cancellations (
     cancellation_id INT PRIMARY KEY AUTO_INCREMENT,
     booking_id INT NOT NULL,
@@ -219,9 +219,9 @@ CREATE TABLE IF NOT EXISTS cancellations (
         REFERENCES bookings (booking_id)
 );
 
--- ============================================================
+
 -- 14. NOTIFICATIONS
--- ============================================================
+
 CREATE TABLE IF NOT EXISTS notifications (
     notif_id INT PRIMARY KEY AUTO_INCREMENT,
     user_type ENUM('Passenger', 'Operator', 'Admin') NOT NULL,
@@ -232,9 +232,9 @@ CREATE TABLE IF NOT EXISTS notifications (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- ============================================================
+
 -- 15. SYSTEM LOGS
--- ============================================================
+
 CREATE TABLE IF NOT EXISTS system_logs (
     log_id INT PRIMARY KEY AUTO_INCREMENT,
     action VARCHAR(200) NOT NULL,
